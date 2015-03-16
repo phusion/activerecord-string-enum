@@ -20,11 +20,11 @@ Or install it yourself as:
 
 ## Usage
 
-class MyModel < ActiveRecord::Base
-    extend ActiveRecord::StringEnum
-
-    enum :status, [:running, :finished]
-end
+    class Task < ActiveRecord::Base
+        extend ActiveRecord::StringEnum
+    
+        str_enum :status, [:running, :finished]
+    end
 
 ## Contributing
 

@@ -1,4 +1,5 @@
-require "activerecord/string/enum/version"
+require "active_record/string_enum/version"
+require 'active_record/type/value'
 require 'active_support/core_ext/object/deep_dup'
 
 module ActiveRecord
@@ -103,12 +104,16 @@ module ActiveRecord
 
         # def self.statuses statuses end
         detect_enum_conflict!(name, name.to_s.pluralize, true)
-        klass.singleton_class.send(:define_method, name.to_s.pluralize) { enum_values }
+        klass.singleton_class.send(:define_method, name.to_s.pluralize) { values }
 
         detect_enum_conflict!(name, name)
         detect_enum_conflict!(name, "#{name}=")
 
-        attribute name, EnumType.new(name, enum_values)
+        # TODO: in Rails 4.2.1 this will be legal:
+        # attribute name, EnumType.new(name, enum_values)
+        # instead of the next two lines:
+        type = EnumType.new(name, enum_values)
+        define_method("#{name}=") { |value| self[name] = type.cast(value) }
 
         _enum_methods_module.module_eval do
           enum_values.each do |value|

@@ -1,11 +1,11 @@
 # coding: utf-8
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'activerecord/string/enum/version'
+require 'active_record/string_enum/version'
 
 Gem::Specification.new do |spec|
   spec.name          = "activerecord-string-enum"
-  spec.version       = Activerecord::StringEnum::VERSION
+  spec.version       = ActiveRecord::StringEnum::VERSION
   spec.authors       = ["Tinco Andringa"]
   spec.email         = ["tinco@phusion.nl"]
   spec.summary       = %q{Make ActiveRecord 4's Enum store as strings instead of integers.}
@@ -20,4 +20,10 @@ Gem::Specification.new do |spec|
 
   spec.add_development_dependency "bundler", "~> 1.7"
   spec.add_development_dependency "rake", "~> 10.0"
+  spec.add_development_dependency "activesupport", "4.2.0"
+  spec.add_development_dependency "activerecord", "4.2.0"
+  spec.add_development_dependency "erubis"
+  spec.add_development_dependency "sqlite3"
+  spec.add_development_dependency "mocha"
+  spec.add_development_dependency "simplecov"
 end

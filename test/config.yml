@@ -1,0 +1,12 @@
+default_connection: sqlite3_mem
+
+with_manual_interventions: false
+
+connections:
+  sqlite3_mem:
+    arunit:
+      adapter: sqlite3
+      database: ':memory:'
+    arunit2:
+      adapter: sqlite3
+      database: ':memory:'
