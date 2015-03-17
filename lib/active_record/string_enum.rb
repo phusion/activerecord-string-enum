@@ -75,7 +75,7 @@ module ActiveRecord
         return if value.blank?
 
         if mapping.include?(value.to_s)
-          value
+          value.to_sym
         else
           raise ArgumentError, "'#{value}' is not a valid #{name}"
         end
@@ -83,7 +83,7 @@ module ActiveRecord
 
       def deserialize(value)
         return if value.nil?
-        cast(value)
+        value.to_sym
       end
 
       def serialize(value)
@@ -111,9 +111,13 @@ module ActiveRecord
 
         # TODO: in Rails 4.2.1 this will be legal:
         # attribute name, EnumType.new(name, enum_values)
-        # instead of the next two lines:
+        # instead of the next lines:
         type = EnumType.new(name, enum_values)
-        define_method("#{name}=") { |value| self[name] = type.cast(value) }
+        define_method("#{name}=") do |value|
+          write_attribute(name, type.cast(value))
+        end
+
+        define_method(name) { type.deserialize(self[name]) }
 
         _enum_methods_module.module_eval do
           enum_values.each do |value|

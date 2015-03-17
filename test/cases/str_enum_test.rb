@@ -18,8 +18,8 @@ class EnumTest < ActiveRecord::TestCase
   end
 
   test "query state with strings" do
-    assert_equal "proposed", @book.status
-    assert_equal "unread", @book.read_status
+    assert_equal :proposed, @book.status
+    assert_equal :unread, @book.read_status
   end
 
   test "find via scope" do
@@ -61,7 +61,7 @@ class EnumTest < ActiveRecord::TestCase
   test "enum changes" do
     old_status = @book.status
     @book.status = :published
-    assert_equal [old_status, 'published'], @book.changes[:status]
+    assert_equal [old_status, :published], @book.changes[:status]
   end
 
   test "enum attribute was" do
@@ -77,7 +77,7 @@ class EnumTest < ActiveRecord::TestCase
 
   test "enum attribute changed to" do
     @book.status = :published
-    assert @book.attribute_changed?(:status, to: 'published')
+    assert @book.attribute_changed?(:status, to: :published)
   end
 
   test "enum attribute changed from" do
@@ -89,7 +89,7 @@ class EnumTest < ActiveRecord::TestCase
   test "enum attribute changed from old status to new status" do
     old_status = @book.status
     @book.status = :published
-    assert @book.attribute_changed?(:status, from: old_status, to: 'published')
+    assert @book.attribute_changed?(:status, from: old_status, to: :published)
   end
 
   test "enum didn't change" do
@@ -246,7 +246,7 @@ class EnumTest < ActiveRecord::TestCase
       extend ActiveRecord::StringEnum
       def self.name; 'Book'; end
       str_enum status: [:proposed, :written]
-      validates_inclusion_of :status, in: ["written"]
+      validates_inclusion_of :status, in: [:written]
     end
     klass.delete_all
     invalid_book = klass.new(status: "proposed")
@@ -270,11 +270,11 @@ class EnumTest < ActiveRecord::TestCase
 
     book1 = klass1.proposed.create!
     book1.status = :written
-    assert_equal ['proposed', 'written'], book1.status_change
+    assert_equal [:proposed, :written], book1.status_change
 
     book2 = klass2.drafted.create!
     book2.status = :uploaded
-    assert_equal ['drafted', 'uploaded'], book2.status_change
+    assert_equal [:drafted, :uploaded], book2.status_change
   end
 
   test "enums are inheritable" do
@@ -286,10 +286,10 @@ class EnumTest < ActiveRecord::TestCase
 
     book1 = subklass1.proposed.create!
     book1.status = :written
-    assert_equal ['proposed', 'written'], book1.status_change
+    assert_equal [:proposed, :written], book1.status_change
 
     book2 = subklass2.drafted.create!
     book2.status = :uploaded
-    assert_equal ['drafted', 'uploaded'], book2.status_change
+    assert_equal [:drafted, :uploaded], book2.status_change
   end
 end
